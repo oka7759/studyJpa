@@ -2,13 +2,12 @@ package jpabook.jpashop.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jdk.jfr.Registered;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.Order.simpleQuery.SimpleOrderQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,6 +18,7 @@ public class OrderRepository {
     public void save(Order order) {
         em.persist(order);
     }
+
     public Order findOne(Long id) {
         return em.find(Order.class, id);
     }
@@ -65,4 +65,16 @@ public class OrderRepository {
     }
 
 
+    public List<Order> findAllWithMemberDelivery() {
+        return null;
+    }
+
+
+    public List<Order> findAllWithItem() {
+        return em.createQuery("select o from order o" +
+                " join fetch o.member m" +
+                " join fetch o.delevery d" +
+                " join fetch o.orderItems oi" +
+                "join fetch o.irem i", Order.class).getResultList();
+    }
 }
